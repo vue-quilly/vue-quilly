@@ -10,10 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "katex": "^0.16.25",
-    "nuxt": "^4.3.0",
-    "vue": "^3.5.25",
+    "katex": "^0.16.37",
+    "nuxt": "^4.3.1",
+    "vue": "^3.5.29",
     "vue-quilly": "^1.1.6",
-    "vue-router": "^4.6.3"
+    "vue-router": "^5.0.3"
   }
 }

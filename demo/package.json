@@ -10,20 +10,20 @@
   },
   "dependencies": {
     "@vercel/analytics": "^1.6.1",
-    "@vueuse/core": "^14.1.0",
-    "katex": "^0.16.25",
+    "@vueuse/core": "^14.2.1",
+    "katex": "^0.16.37",
     "parchment": "^3.0.0",
     "quill": "^2.0.3",
     "quill-image-resize-module": "^3.0.0",
-    "vue": "^3.5.25",
+    "vue": "^3.5.29",
     "vue-markdown-render": "^2.3.0",
     "vue-quilly": "^1.1.6",
-    "vue-router": "^4.6.4"
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.2",
+    "@vitejs/plugin-vue": "^6.0.4",
     "typescript": "^5.9.3",
-    "vite": "^7.2.6",
-    "vue-tsc": "^3.1.6"
+    "vite": "^7.3.1",
+    "vue-tsc": "^3.2.5"
   }
 }
