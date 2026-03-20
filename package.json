@@ -5,10 +5,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "preview": "vite preview",
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "preview": "vite preview"
   },
   "files": [
     "dist",
@@ -21,11 +18,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alekswebnet/vue-quilly.git"
+    "url": "git+https://github.com/vue-quilly/vue-quilly.git"
   },
-  "homepage": "https://github.com/alekswebnet/vue-quilly",
+  "homepage": "https://github.com/vue-quilly/vue-quilly",
   "bugs": {
-    "url": "https://github.com/alekswebnet/vue-quilly/issues"
+    "url": "https://github.com/vue-quilly/vue-quilly/issues"
   },
   "keywords": [
     "quill",
@@ -33,6 +30,7 @@
     "wysiwyg",
     "rich-text",
     "html-editor",
+    "quill-editor",
     "vue3",
     "vue",
     "vuejs",
@@ -57,19 +55,18 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^25.3.5",
-    "@vitejs/plugin-vue": "^6.0.4",
+    "@types/node": "^25.5.0",
+    "@vitejs/plugin-vue": "^6.0.5",
     "typescript": "^5.9.3",
-    "vite": "^7.3.1",
+    "vite": "^8.0.1",
     "vite-plugin-dts": "^4.5.4",
-    "vitepress": "2.0.0-alpha.15",
-    "vue-tsc": "^3.2.5"
+    "vue-tsc": "^3.2.6"
   },
   "dependencies": {
-    "@vercel/analytics": "^1.6.1",
+    "@vercel/analytics": "^2.0.1",
     "quill": "^2.0.3",
-    "vue": "^3.5.29",
-    "vue-router": "^5.0.3"
+    "vue": "^3.5.30",
+    "vue-router": "^5.0.4"
   },
   "packageManager": "pnpm@10.30.3"
 }
