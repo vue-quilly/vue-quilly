@@ -87,14 +87,6 @@ onMounted(() => {
 
 [![Star History Chart](https://api.star-history.com/svg?repos=alekswebnet/vue-quilly&type=date&legend=top-left)](https://www.star-history.com/#alekswebnet/vue-quilly&type=date&legend=top-left)
 
-## Support
-
-If you find `vue-quilly` useful and want to support its development:
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/oleksandrshevchuk)
-
-❤️ Your support helps with maintenance, bug fixes, and long-term improvements.
-
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
