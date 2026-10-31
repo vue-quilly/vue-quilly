@@ -93,4 +93,8 @@ quill.setContents(new Delta()
 - Consider using `onMounted` hook for editor initialization to avoid hydration issues
 
 ## Testing and Validation
-Currently relies on manual testing through the demo application. Test your changes against the demo implementations in `/demo/src/components/` which showcase different editor configurations.
+Unit tests live in `tests/` and run with Vitest and Vue Test Utils in jsdom:
+```bash
+pnpm test
+```
+CI (`.github/workflows/test.yml`) runs the tests and `pnpm build` on every push and pull request to `main`. For visual checks, also test your changes against the demo implementations in `/demo/src/components/` which showcase different editor configurations.
