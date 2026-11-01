@@ -10,7 +10,8 @@
   },
   "files": [
     "dist",
-    "src/components/"
+    "src/components/",
+    "src/composables/"
   ],
   "author": {
     "name": "Oleksandr Shevchuk",

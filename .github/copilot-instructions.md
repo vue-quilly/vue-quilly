@@ -17,12 +17,20 @@ The main `QuillyEditor.vue` component follows these patterns:
   - `options`: Quill initialization options
   - `isSemanticHtmlModel`: Flag for semantic HTML output
 - Emits both Quill native events and v-model updates
+- Delegates all editor logic to the `useQuilly` composable, change behavior there
+
+### Composable
+`useQuilly(container, options)` in `src/composables/useQuilly.ts` holds the editor logic and is exported for use without the component:
+- Options mirror the component: `model` ref instead of v-model, `options`, `isSemanticHtmlModel`, and `on*` callbacks instead of emits
+- Returns `initialize(QuillClass)`, the `model` ref and the Quill instance as a `quill` shallow ref
 
 ### Project Structure
 ```
 src/
   components/
     QuillyEditor.vue    # Main component
+  composables/
+    useQuilly.ts        # Editor logic, used by the component and exported
 demo/                   # Example implementations
   src/components/       # Different editor configurations
 nuxt/                  # Nuxt.js integration example

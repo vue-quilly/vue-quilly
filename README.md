@@ -72,6 +72,38 @@ onMounted(() => {
 </template>
 ```
 
+### Composable
+
+`useQuilly` runs the same editor logic without the component, on a container you render yourself:
+
+```vue
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useQuilly } from 'vue-quilly'
+import Quill from 'quill'
+import 'quill/dist/quill.snow.css'
+
+const container = ref<HTMLElement>()
+const content = ref('<p>Hello Quilly!</p>')
+
+const { initialize } = useQuilly(container, {
+  model: content,
+  options: { theme: 'snow' },
+  onTextChange: ({ source }) => console.log('changed by', source)
+})
+
+onMounted(() => {
+  initialize(Quill)
+})
+</script>
+
+<template>
+  <div ref="container"></div>
+</template>
+```
+
+It takes the component's props as options (`model` instead of `v-model`, `options`, `isSemanticHtmlModel`) and its events as callbacks (`onTextChange`, `onSelectionChange`, `onEditorChange`, `onFocus`, `onBlur`, `onReady`). It returns `initialize`, the `model` ref and the Quill instance as a `quill` ref.
+
 ## Live Demo
 
 🎯 **[Try it live](https://vue-quilly.vercel.app/)** - See various editors built with `vue-quilly`
