@@ -1,0 +1,71 @@
+{
+  "$schema": "https://fundingjson.org/schema/v1.1.0.json",
+  "version": "v1.0.0",
+  "entity": {
+    "type": "individual",
+    "role": "maintainer",
+    "name": "Oleksandr Shevchuk",
+    "email": "alekswebnet@gmail.com",
+    "description": "Author and sole maintainer of vue-quilly, a Vue 3 component and composable for building Quill v2 based rich-text editors. Funding pays for maintenance time: Quill and Vue upgrades, bug fixes, issue triage, documentation and the demo site.",
+    "webpageUrl": {
+      "url": "https://github.com/alekswebnet"
+    }
+  },
+  "projects": [
+    {
+      "guid": "vue-quilly",
+      "name": "vue-quilly",
+      "description": "Tiny Vue 3 component and composable for building WYSIWYG editors on Quill v2. Imports quill/core only for a minimal bundle, works with HTML and Quill Delta content, ships TypeScript types and supports Nuxt 4 SSR. About 30,000 npm downloads per month.",
+      "webpageUrl": {
+        "url": "https://github.com/vue-quilly/vue-quilly"
+      },
+      "repositoryUrl": {
+        "url": "https://github.com/vue-quilly/vue-quilly"
+      },
+      "licenses": ["spdx:MIT"],
+      "tags": ["web-development", "developer-tools", "programming"]
+    }
+  ],
+  "funding": {
+    "channels": [
+      {
+        "guid": "opencollective",
+        "type": "payment-provider",
+        "address": "https://opencollective.com/vuequilly",
+        "description": "Open Collective, fiscally hosted by Open Source Collective (US 501(c)(6) non-profit). Companies receive an invoice; all spending is public."
+      }
+    ],
+    "plans": [
+      {
+        "guid": "sponsor-monthly",
+        "status": "active",
+        "name": "Sponsor",
+        "description": "Monthly sponsorship for companies shipping vue-quilly in a product. Logo and link in the README and on the collective page.",
+        "amount": 100,
+        "currency": "USD",
+        "frequency": "monthly",
+        "channels": ["opencollective"]
+      },
+      {
+        "guid": "backer-monthly",
+        "status": "active",
+        "name": "Backer",
+        "description": "Monthly support from individual developers.",
+        "amount": 5,
+        "currency": "USD",
+        "frequency": "monthly",
+        "channels": ["opencollective"]
+      },
+      {
+        "guid": "one-time",
+        "status": "active",
+        "name": "One-time contribution",
+        "description": "Any amount, one time.",
+        "amount": 0,
+        "currency": "USD",
+        "frequency": "one-time",
+        "channels": ["opencollective"]
+      }
+    ]
+  }
+}

@@ -26,6 +26,10 @@
   "bugs": {
     "url": "https://github.com/vue-quilly/vue-quilly/issues"
   },
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/vuequilly"
+  },
   "keywords": [
     "quill",
     "quill2",
