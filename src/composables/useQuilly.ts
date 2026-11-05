@@ -1,7 +1,26 @@
 import type Quill from 'quill/core'
 import type { Delta, EmitterSource, QuillOptions, Range } from 'quill/core'
-import { getCurrentScope, onScopeDispose, ref, shallowRef, toValue, watch } from 'vue'
-import type { MaybeRefOrGetter, Ref, ShallowRef } from 'vue'
+import {
+  getCurrentInstance,
+  getCurrentScope,
+  onMounted,
+  onScopeDispose,
+  ref,
+  shallowRef,
+  toValue,
+  unref,
+  watch
+} from 'vue'
+import type { MaybeRef, MaybeRefOrGetter, Ref, ShallowRef } from 'vue'
+
+// Quill constructor, from 'quill' or 'quill/core'
+export type QuillClass = typeof Quill
+
+// Function that loads Quill, e.g. () => import('quill')
+export type QuillLoader = () => Promise<QuillClass | { default: QuillClass }>
+
+// Quill class or loader the editor initializes itself with after mount
+export type QuillClassSource = QuillClass | QuillLoader
 
 export interface UseQuillyOptions {
   // HTML model, synced with the editor content both ways
@@ -10,6 +29,9 @@ export interface UseQuillyOptions {
   options?: MaybeRefOrGetter<QuillOptions | undefined>
   // Use Quill semantic HTML for the model instead of the editor inner HTML
   isSemanticHtmlModel?: MaybeRefOrGetter<boolean | undefined>
+  // Quill class or loader, read on mount to initialize the editor without initialize().
+  // A ref, not a getter: a loader is a function too
+  quillClass?: MaybeRef<QuillClassSource | undefined>
   onTextChange?: (event: { delta: Delta; oldContent: Delta; source: EmitterSource }) => void
   onSelectionChange?: (event: { range: Range; oldRange: Range; source: EmitterSource }) => void
   onEditorChange?: (eventName: 'text-change' | 'selection-change') => void
@@ -27,12 +49,33 @@ export interface UseQuillyReturn {
   initialize: (QuillClass: typeof Quill) => Quill
 }
 
+// Loaded classes per loader, so editors sharing a loader load Quill and register plugins once
+const loadedClasses = new WeakMap<QuillLoader, Promise<QuillClass>>()
+
+// The Quill class has a static import(), a loader doesn't
+const isQuillClass = (value: unknown): value is QuillClass =>
+  typeof value === 'function' && typeof (value as QuillClass).import === 'function'
+
+// Resolve a class or loader to the Quill class, unwrapping a module's default export
+const resolveQuillClass = (source: QuillClassSource): Promise<QuillClass> => {
+  if (isQuillClass(source)) return Promise.resolve(source)
+  let loaded = loadedClasses.get(source)
+  if (!loaded) {
+    loaded = source().then((result) => (isQuillClass(result) ? result : result.default))
+    loadedClasses.set(source, loaded)
+    // Forget a failed load so a later mount can retry
+    loaded.catch(() => loadedClasses.delete(source))
+  }
+  return loaded
+}
+
 export function useQuilly(
   container: MaybeRefOrGetter<HTMLElement | null | undefined>,
   {
     model = ref<string | null>(),
     options,
     isSemanticHtmlModel,
+    quillClass,
     onTextChange,
     onSelectionChange,
     onEditorChange,
@@ -44,6 +87,8 @@ export function useQuilly(
   const quill = shallowRef<Quill | null>(null)
   // Last HTML pasted into or produced by the editor
   const html = ref<string | null>()
+  // Set on dispose, stops a pending load from creating an editor
+  let isDisposed = false
 
   // Editor HTML depending on model type
   const getHTML = (instance: Quill) =>
@@ -60,6 +105,11 @@ export function useQuilly(
 
   // Editor initialization, returns Quill instance
   const initialize = (QuillClass: typeof Quill) => {
+    // With quillClass, the load on mount and manual calls share one editor
+    if (quill.value && unref(quillClass)) {
+      return quill.value
+    }
+
     const instance = new QuillClass(toValue(container) as HTMLElement, toValue(options))
 
     // Set editor initial model
@@ -94,6 +144,20 @@ export function useQuilly(
     return instance
   }
 
+  // Initialize from quillClass after mount, so Quill never loads on the server
+  if (getCurrentInstance()) {
+    onMounted(() => {
+      const source = unref(quillClass)
+      if (!source) return
+      // Returning the promise sends a failed load to the app error handler
+      return resolveQuillClass(source).then((QuillClass) => {
+        if (!isDisposed && !quill.value && toValue(container)) {
+          initialize(QuillClass)
+        }
+      })
+    })
+  }
+
   // Watch model and paste HTML if it was changed outside of the editor
   watch(model, (newValue) => {
     const instance = quill.value
@@ -120,6 +184,7 @@ export function useQuilly(
   // Release the instance together with the component or effect scope
   if (getCurrentScope()) {
     onScopeDispose(() => {
+      isDisposed = true
       quill.value = null
     })
   }

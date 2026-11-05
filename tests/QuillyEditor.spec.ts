@@ -1,8 +1,10 @@
-import { afterEach, describe, expect, it } from 'vitest'
-import { enableAutoUnmount, mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { afterEach, describe, expect, it, vi } from 'vitest'
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
+import { createSSRApp, defineComponent, h, nextTick, ref } from 'vue'
+import { renderToString } from 'vue/server-renderer'
 import Quill, { Delta, QuillOptions } from 'quill'
 import { QuillyEditor } from '../src'
+import type { QuillClassSource } from '../src'
 
 enableAutoUnmount(afterEach)
 
@@ -85,5 +87,107 @@ describe('QuillyEditor', () => {
 
     quill.blur()
     expect(wrapper.emitted('blur')).toEqual([[quill]])
+  })
+})
+
+// Mount the editor with quillClass and wait for Quill to load
+const mountWithQuillClass = async (quillClass: QuillClassSource, mountOptions: object = {}) => {
+  const wrapper = mount(QuillyEditor, {
+    props: { modelValue: '<p>Hello</p>', quillClass },
+    attachTo: document.body,
+    ...mountOptions
+  })
+  await flushPromises()
+  return wrapper
+}
+
+// Loader that resolves only when the test calls resolve()
+const deferredLoader = () => {
+  let done!: (QuillClass: typeof Quill) => void
+  const loader = () => new Promise<typeof Quill>((resolve) => (done = resolve))
+  return { loader, resolve: (QuillClass: typeof Quill) => done(QuillClass) }
+}
+
+describe('QuillyEditor with quillClass', () => {
+  it.each([
+    ['a Quill class', Quill],
+    ['a loader returning the class', async () => Quill],
+    ['a loader returning a module', async () => ({ default: Quill })]
+  ])('initializes from %s after mount', async (_, quillClass) => {
+    const wrapper = await mountWithQuillClass(quillClass)
+    const [[quill]] = wrapper.emitted('ready') as [[Quill]]
+
+    expect(quill.container).toBe(wrapper.element)
+    expect(quill.root.innerHTML).toBe('<p>Hello</p>')
+  })
+
+  it('initializes from a dynamic import', async () => {
+    const wrapper = mount(QuillyEditor, { props: { quillClass: () => import('quill') }, attachTo: document.body })
+
+    await vi.waitFor(() => expect(wrapper.emitted('ready')).toHaveLength(1))
+  })
+
+  it('runs a shared loader once for several editors', async () => {
+    const loader = vi.fn(async () => Quill)
+    const first = await mountWithQuillClass(loader)
+    const second = await mountWithQuillClass(loader)
+
+    expect(loader).toHaveBeenCalledTimes(1)
+    expect(first.emitted('ready')).toHaveLength(1)
+    expect(second.emitted('ready')).toHaveLength(1)
+  })
+
+  it('creates no editor when unmounted before Quill loads', async () => {
+    const { loader, resolve } = deferredLoader()
+    const onReady = vi.fn()
+    const show = ref(true)
+    mount(
+      defineComponent(() => () => (show.value ? h(QuillyEditor, { quillClass: loader, onReady }) : null)),
+      { attachTo: document.body }
+    )
+
+    show.value = false
+    await nextTick()
+    resolve(Quill)
+    await flushPromises()
+
+    expect(onReady).not.toHaveBeenCalled()
+    expect(document.querySelector('.ql-container')).toBeNull()
+  })
+
+  it('shares one editor between the load and initialize()', async () => {
+    const { loader, resolve } = deferredLoader()
+    const wrapper = mount(QuillyEditor, { props: { quillClass: loader }, attachTo: document.body })
+
+    // Initialize manually before the load finishes, then again after it
+    const quill = wrapper.vm.initialize(Quill)
+    resolve(Quill)
+    await flushPromises()
+
+    expect(wrapper.vm.initialize(Quill)).toBe(quill)
+    expect(wrapper.emitted('ready')).toEqual([[quill]])
+    expect(wrapper.element.querySelectorAll('.ql-editor')).toHaveLength(1)
+  })
+
+  it('reports a failed load to the app error handler and retries on the next mount', async () => {
+    const error = new Error('Quill failed to load')
+    const loader = vi.fn<() => Promise<typeof Quill>>().mockRejectedValueOnce(error).mockResolvedValue(Quill)
+    const errorHandler = vi.fn()
+
+    const failed = await mountWithQuillClass(loader, { global: { config: { errorHandler } } })
+    expect(errorHandler).toHaveBeenCalledWith(error, expect.anything(), expect.anything())
+    expect(failed.emitted('ready')).toBeUndefined()
+
+    const retried = await mountWithQuillClass(loader)
+    expect(loader).toHaveBeenCalledTimes(2)
+    expect(retried.emitted('ready')).toHaveLength(1)
+  })
+
+  it('renders an empty container on the server without loading Quill', async () => {
+    const loader = vi.fn(async () => Quill)
+    const html = await renderToString(createSSRApp({ render: () => h(QuillyEditor, { quillClass: loader }) }))
+
+    expect(html).toBe('<div></div>')
+    expect(loader).not.toHaveBeenCalled()
   })
 })

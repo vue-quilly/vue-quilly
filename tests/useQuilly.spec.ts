@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { enableAutoUnmount, mount } from '@vue/test-utils'
+import { enableAutoUnmount, flushPromises, mount } from '@vue/test-utils'
 import { defineComponent, effectScope, h, nextTick, ref } from 'vue'
 import Quill from 'quill'
 import { useQuilly, UseQuillyOptions, UseQuillyReturn } from '../src'
@@ -83,6 +83,35 @@ describe('useQuilly', () => {
 
     scope.stop()
     expect(editor.quill.value).toBeNull()
+    element.remove()
+  })
+
+  it('initializes from quillClass when the host component mounts', async () => {
+    let editor!: UseQuillyReturn
+    const wrapper = mount(
+      defineComponent(() => {
+        const container = ref<HTMLElement>()
+        editor = useQuilly(container, { quillClass: async () => ({ default: Quill }) })
+        return () => h('div', { ref: container })
+      }),
+      { attachTo: document.body }
+    )
+    expect(editor.quill.value).toBeNull()
+
+    await flushPromises()
+    expect(editor.quill.value?.container).toBe(wrapper.element)
+  })
+
+  it('leaves initialization to initialize() outside a component', async () => {
+    const element = document.body.appendChild(document.createElement('div'))
+    const scope = effectScope()
+    const editor = scope.run(() => useQuilly(element, { quillClass: Quill }))!
+
+    await flushPromises()
+    expect(editor.quill.value).toBeNull()
+    expect(editor.initialize(Quill).container).toBe(element)
+
+    scope.stop()
     element.remove()
   })
 })
