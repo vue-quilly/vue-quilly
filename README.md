@@ -72,6 +72,42 @@ onMounted(() => {
 </template>
 ```
 
+### Loading Quill after mount
+
+Pass the Quill class or a loader as `quill-class`. The editor reads it once after mount and initializes itself, with no `initialize()` call:
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { QuillyEditor } from 'vue-quilly'
+import 'quill/dist/quill.snow.css'
+
+const content = ref('<p>Hello Quilly!</p>')
+const options = { theme: 'snow' }
+const loadQuill = () => import('quill')
+</script>
+
+<template>
+  <QuillyEditor v-model="content" :options="options" :quill-class="loadQuill" />
+</template>
+```
+
+With a loader, Quill loads in its own chunk after mount and never on the server, so this works in Nuxt and other SSR setups without `<ClientOnly>`.
+
+To use plugins, register them in the loader. Import them there too: most plugins import Quill themselves, which would pull it back into the page bundle and onto the server. Define such a loader at module level, outside `<script setup>`, so it runs once however many editors use it:
+
+```ts
+// quill-loader.ts
+export const loadQuill = async () => {
+  const [{ default: Quill }, { default: QuillResize }] = await Promise.all([
+    import('quill'),
+    import('quill-resize-module')
+  ])
+  Quill.register('modules/resize', QuillResize)
+  return Quill
+}
+```
+
 ### Composable
 
 `useQuilly` runs the same editor logic without the component, on a container you render yourself:
@@ -102,7 +138,7 @@ onMounted(() => {
 </template>
 ```
 
-It takes the component's props as options (`model` instead of `v-model`, `options`, `isSemanticHtmlModel`) and its events as callbacks (`onTextChange`, `onSelectionChange`, `onEditorChange`, `onFocus`, `onBlur`, `onReady`). It returns `initialize`, the `model` ref and the Quill instance as a `quill` ref.
+It takes the component's props as options (`model` instead of `v-model`, `options`, `isSemanticHtmlModel`, `quillClass`) and its events as callbacks (`onTextChange`, `onSelectionChange`, `onEditorChange`, `onFocus`, `onBlur`, `onReady`). It returns `initialize`, the `model` ref and the Quill instance as a `quill` ref.
 
 ## Live Demo
 

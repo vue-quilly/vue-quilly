@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Quill, { Delta, EmitterSource, QuillOptions, Range } from 'quill/core'
-import { computed, ref } from 'vue'
+import { computed, ref, toRef } from 'vue'
 import { useQuilly } from '../composables/useQuilly'
+import type { QuillClassSource } from '../composables/useQuilly'
 
 const props = defineProps<{
   // HTML model value, supports v-model
@@ -9,6 +10,8 @@ const props = defineProps<{
   // Quill initialization options
   options?: QuillOptions
   isSemanticHtmlModel?: boolean
+  // Quill class or loader, the editor initializes itself after mount
+  quillClass?: QuillClassSource
 }>()
 
 const emit = defineEmits<{
@@ -37,6 +40,7 @@ const { initialize } = useQuilly(container, {
   }),
   options: () => props.options,
   isSemanticHtmlModel: () => props.isSemanticHtmlModel,
+  quillClass: toRef(props, 'quillClass'),
   onTextChange: (event) => emit('text-change', event),
   onSelectionChange: (event) => emit('selection-change', event),
   onEditorChange: (eventName) => emit('editor-change', eventName),
