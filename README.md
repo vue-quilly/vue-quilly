@@ -100,6 +100,7 @@ To use plugins, register them in a module of your own and load that module inste
 // quill-setup.ts
 import Quill from 'quill'
 import QuillResize from 'quill-resize-module'
+import 'quill-resize-module/dist/resize.css'
 
 Quill.register('modules/resize', QuillResize)
 
