@@ -6,6 +6,7 @@ Tiny Vue component, that helps to create [Quill v2](https://quilljs.com/) based 
 [![npm downloads](https://img.shields.io/npm/dm/vue-quilly?color=green)](https://npm.chart.dev/vue-quilly)
 [![NPM Type Definitions](https://img.shields.io/npm/types/vue-quilly)](https://www.npmjs.com/package/vue-quilly?activeTab=code)
 [![GitHub License](https://img.shields.io/github/license/alekswebnet/vue-quilly)](https://github.com/alekswebnet/vue-quilly?tab=readme-ov-file#license)
+[![MadeWithVueJs.com shield](https://madewithvuejs.com/storage/repo-shields/5504-shield.svg)](https://madewithvuejs.com/p/vue-quilly/shield-link)
 
 ## Features
 
