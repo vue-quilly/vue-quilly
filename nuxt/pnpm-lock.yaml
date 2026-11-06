@@ -21,8 +21,8 @@ importers:
         specifier: ^3.5.44
         version: 3.5.44(typescript@5.9.3)
       vue-quilly:
-        specifier: ^1.2.1
-        version: 1.2.1(quill@2.0.3)(vue@3.5.44(typescript@5.9.3))
+        specifier: ^1.3.0
+        version: 1.3.0(quill@2.0.3)(vue@3.5.44(typescript@5.9.3))
       vue-router:
         specifier: ^5.4.0
         version: 5.4.0(@vue/compiler-sfc@3.5.44)(esbuild@0.28.2)(rolldown@1.2.16)(rollup@4.67.2)(vite@8.3.5(esbuild@0.28.2)(jiti@2.7.0)(terser@5.51.2)(yaml@2.9.0))(vue@3.5.44(typescript@5.9.3))
@@ -2951,8 +2951,8 @@ packages:
   vue-devtools-stub@0.1.0:
     resolution: {integrity: sha512-RutnB7X8c5hjq39NceArgXg28WZtZpGc3+J16ljMiYnFhKvd8hITxSWQSQ5bvldxMDU6gG5mkxl1MTQLXckVSQ==}
 
-  vue-quilly@1.2.1:
-    resolution: {integrity: sha512-2JFEzkXgj0OWmAjO68nSwUL4NtDv4++bIpafV2+YqKxXjpZVLAx1fCg0+SLhmfN2qyM0wPZvE2AI2Ip5ch1JuQ==}
+  vue-quilly@1.3.0:
+    resolution: {integrity: sha512-U5uD7FIs0UVBGf/yTvw1QJo46ixlkQYbO9aTcXqJveFAs6ce+U0ICozavWO5RsHqVZbXj0Z7Jjs6QNQ87ekUqQ==}
     peerDependencies:
       quill: ^2.0.0
       vue: ^3.3.0
@@ -6231,7 +6231,7 @@ snapshots:
 
   vue-devtools-stub@0.1.0: {}
 
-  vue-quilly@1.2.1(quill@2.0.3)(vue@3.5.44(typescript@5.9.3)):
+  vue-quilly@1.3.0(quill@2.0.3)(vue@3.5.44(typescript@5.9.3)):
     dependencies:
       quill: 2.0.3
       vue: 3.5.44(typescript@5.9.3)
