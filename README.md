@@ -148,7 +148,7 @@ It takes the component's props as options (`model` instead of `v-model`, `option
 
 ## Examples
 
-- [Demo Source Code](https://github.com/alekswebnet/vue-quilly/tree/main/demo) - Complete examples with different configurations
+- [Demo Source Code](https://github.com/vue-quilly/website) - Complete examples with different configurations
 - [Nuxt 4 Integration](https://github.com/alekswebnet/vue-quilly/tree/main/nuxt) - SSR setup example
 - [Browser CDN Setup](https://codepen.io/redrobot753/pen/VwJwPLP) - CodePen example
 

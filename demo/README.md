@@ -1,21 +1,5 @@
 # vue-quilly demo
 
-This demo project is created to show how to build editor on top of `QullyEditor` component.
+The demo moved to its own repository: [vue-quilly/website](https://github.com/vue-quilly/website).
 
-## Project Setup
-
-```sh
-pnpm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-pnpm dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-pnpm build
-```
+See it live at [vue-quilly.vercel.app](https://vue-quilly.vercel.app/).
