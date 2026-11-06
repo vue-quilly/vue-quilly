@@ -1,7 +1,5 @@
 <template>
   <div>
-    <ClientOnly>
-      <CompleteEditor></CompleteEditor>
-    </ClientOnly>
+    <CompleteEditor />
   </div>
 </template>
