@@ -2,15 +2,5 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  ssr: true,
-  vite: {
-    optimizeDeps: {
-      include: [
-        'vue-quilly',
-        'quill/core',
-        'katex',
-        'quill',
-      ]
-    }
-  }
+  ssr: true
 })
