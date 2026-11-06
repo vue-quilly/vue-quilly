@@ -21,10 +21,10 @@ Tiny Vue component, that helps to create [Quill v2](https://quilljs.com/) based 
 📖 **[Full Documentation](https://vue-quilly-docs.vercel.app/)**
 
 - [Getting Started](https://vue-quilly-docs.vercel.app/guide/getting-started.html)
-- [Installation Guide](https://vue-quilly-docs.vercel.app/guide/installation.html)
-- [Basic Usage](https://vue-quilly-docs.vercel.app/guide/basic-usage.html)
+- [Usage](https://vue-quilly-docs.vercel.app/guide/basic-usage.html)
 - [API Reference](https://vue-quilly-docs.vercel.app/api/component.html)
 - [Examples](https://vue-quilly-docs.vercel.app/examples/)
+- [Comparison with VueQuill](https://vue-quilly-docs.vercel.app/guide/vs-vuequill.html)
 
 ## Quick Start
 
@@ -94,18 +94,20 @@ const loadQuill = () => import('quill')
 
 With a loader, Quill loads in its own chunk after mount and never on the server, so this works in Nuxt and other SSR setups without `<ClientOnly>`.
 
-To use plugins, register them in the loader. Import them there too: most plugins import Quill themselves, which would pull it back into the page bundle and onto the server. Define such a loader at module level, outside `<script setup>`, so it runs once however many editors use it:
+To use plugins, register them in a module of your own and load that module instead of `quill`. The module runs once, so each plugin registers once, and plugins that import Quill stay out of the page bundle and off the server:
 
 ```ts
-// quill-loader.ts
-export const loadQuill = async () => {
-  const [{ default: Quill }, { default: QuillResize }] = await Promise.all([
-    import('quill'),
-    import('quill-resize-module')
-  ])
-  Quill.register('modules/resize', QuillResize)
-  return Quill
-}
+// quill-setup.ts
+import Quill from 'quill'
+import QuillResize from 'quill-resize-module'
+
+Quill.register('modules/resize', QuillResize)
+
+export default Quill
+```
+
+```ts
+const loadQuill = () => import('./quill-setup')
 ```
 
 ### Composable
