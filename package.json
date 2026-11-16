@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:types": "tsc -p tests/types"
   },
   "files": [
     "dist",
@@ -47,15 +48,15 @@
   ],
   "main": "./dist/vue-quilly.umd.cjs",
   "module": "./dist/vue-quilly.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/index.d.cts",
   "exports": {
     ".": {
       "import": {
-        "types": "./dist/index.d.ts",
+        "types": "./dist/index.d.mts",
         "default": "./dist/vue-quilly.js"
       },
       "require": {
-        "types": "./dist/index.d.ts",
+        "types": "./dist/index.d.cts",
         "default": "./dist/vue-quilly.umd.cjs"
       }
     }

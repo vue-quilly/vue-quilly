@@ -7,7 +7,7 @@ import path from 'path'
 export default defineConfig({
   plugins: [
     vue(),
-    dts()
+    dts({ outDirs: [{ dir: 'dist', moduleFormat: 'esm' }, { dir: 'dist', moduleFormat: 'cjs' }] })
   ],
   build: {
     lib: {

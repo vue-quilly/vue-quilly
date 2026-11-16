@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import Quill, { Delta, EmitterSource, QuillOptions, Range } from 'quill/core'
+// Keep the .js: quill has no exports map, so 'quill/core' doesn't resolve under node16/nodenext
+import Quill, { Delta, EmitterSource, QuillOptions, Range } from 'quill/core.js'
 import { computed, ref, toRef } from 'vue'
 import { useQuilly } from '../composables/useQuilly'
 import type { QuillClassSource } from '../composables/useQuilly'

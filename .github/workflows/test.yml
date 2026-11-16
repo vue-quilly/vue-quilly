@@ -35,3 +35,7 @@ jobs:
 
     - name: Type-check and build
       run: pnpm build
+
+    # Needs the build output in dist
+    - name: Check published types
+      run: pnpm test:types

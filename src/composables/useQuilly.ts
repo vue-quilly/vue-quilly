@@ -1,5 +1,6 @@
-import type Quill from 'quill/core'
-import type { Delta, EmitterSource, QuillOptions, Range } from 'quill/core'
+// Keep the .js: quill has no exports map, so 'quill/core' doesn't resolve under node16/nodenext
+import type Quill from 'quill/core.js'
+import type { Delta, EmitterSource, QuillOptions, Range } from 'quill/core.js'
 import {
   getCurrentInstance,
   getCurrentScope,
